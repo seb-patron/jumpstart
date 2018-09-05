@@ -49,7 +49,7 @@ def add_gems
 
   gem_group :development, :test do
     gem 'rspec-rails', '~> 3.8'
-    gem 'cucumber-rails', '~> 1.6', required: false
+    gem 'cucumber-rails', '~> 1.6', require: false
     gem 'shoulda-matchers', '~> 3.1', '>= 3.1.2'
     gem 'factory_bot_rails', '~> 4.11'
   end
@@ -236,9 +236,7 @@ def add_shoulda_matchers
     end 
   end
   """.strip
-  insert_into_file "spec/rails_helper.rb","\n\n" + template + "\n\n",
-        after: "# config.filter_gems_from_backtrace("gem name")
-      end"
+  insert_into_file "spec/rails_helper.rb","\n\n" + template + "\n\n"
 end
 
 def add_database_cleaner
@@ -256,11 +254,7 @@ def add_database_cleaner
     end
   end
   """.strip
-
-  insert_into_file "spec/rails_helper.rb","\n\n" + template + "\n\n",
-        after: "with.library :rails
-      end 
-    end"
+  insert_into_file "spec/rails_helper.rb","\n\n" + template + "\n\n"
 end
 
 # Main setup
@@ -271,6 +265,9 @@ add_gems
 after_bundle do
   set_application_name
   stop_spring
+  # Testing suite
+  rails_command 'generate rspec:install'
+  rails_command 'generate cucumber:install'
   add_users
   add_bootstrap
   add_sidekiq
@@ -294,9 +291,6 @@ after_bundle do
 
   add_sitemap
 
-  # Testing suite
-  rails command "generate rspec:install"
-  rails command "generate cucumber:install"
   add_shoulda_matchers
   add_database_cleaner
   

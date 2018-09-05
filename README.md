@@ -1,6 +1,12 @@
 # Rails Jumpstart
 
-It's like Laravel Spark, for Rails. All your Rails apps should start off with a bunch of great defaults.
+Rails Jumpstart Template but with a testing suite that includes:
+- RSpec
+- Cucumber
+- Shoulda-Matchers
+- Factory-bot
+- database_cleaner
+- rails-testing-controller
 
 **Note:** Requires Rails 5.2
 
@@ -20,7 +26,7 @@ You'll need the following installed to run the template successfully:
 #### Creating a new app
 
 ```bash
-rails new myapp -d postgresql -m https://raw.githubusercontent.com/excid3/jumpstart/master/template.rb
+rails new myapp -d postgresql -m https://raw.githubusercontent.com/seb-patron/jumpstart/master/template.rb
 ```
 
 Or if you have downloaded this repo, you can reference template.rb locally:
