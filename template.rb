@@ -298,6 +298,7 @@ after_bundle do
   rails command "generate rspec:install"
   rails command "generate cucumber:install"
   add_shoulda_matchers
+  add_database_cleaner
   
 
 
