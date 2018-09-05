@@ -46,6 +46,18 @@ def add_gems
   gem 'sitemap_generator', '~> 6.0', '>= 6.0.1'
   gem 'webpacker', '~> 3.5', '>= 3.5.3'
   gem 'whenever', require: false
+
+  gem_group :development, :test do
+    gem 'rspec-rails', '~> 3.8'
+    gem 'cucumber-rails', '~> 1.6', required: false
+    gem 'shoulda-matchers', '~> 3.1', '>= 3.1.2'
+    gem 'factory_bot_rails', '~> 4.11'
+  end
+
+  gem_group :test do
+    gem 'database_cleaner', '~> 1.7'
+    gem 'rails-controller-testing', '~> 1.0', '>= 1.0.2'
+  end
 end
 
 def set_application_name
@@ -211,6 +223,46 @@ def add_sitemap
   rails_command "sitemap:install"
 end
 
+def add_shoulda_matchers
+  template = """
+  # Configures shoulda-matchers gem by specifying the test frameworks and libraries we want to use it with
+  Shoulda::Matchers.configure do |config|
+    config.integrate do |with|
+      with.test_framework :rspec
+      with.library :active_record
+      with.library :active_model
+      with.library :action_controller
+      with.library :rails
+    end 
+  end
+  """.strip
+  insert_into_file "spec/rails_helper.rb","\n\n" + template + "\n\n",
+        after: "# config.filter_gems_from_backtrace("gem name")
+      end"
+end
+
+def add_database_cleaner
+  template = """
+  # Sets up cleaning strategy for RSpec
+  RSpec.configure do |config|
+    config.before(:suite) do
+      DatabaseCleaner.strategy = :transaction
+      DatabaseCleaner.clean_with(:truncation)
+    end
+    config.around(:each) do |example|
+      DatabaseCleaner.cleaning do
+        example.run
+      end 
+    end
+  end
+  """.strip
+
+  insert_into_file "spec/rails_helper.rb","\n\n" + template + "\n\n",
+        after: "with.library :rails
+      end 
+    end"
+end
+
 # Main setup
 add_template_repository_to_source_path
 
@@ -241,6 +293,12 @@ after_bundle do
   add_whenever
 
   add_sitemap
+
+  # Testing suite
+  rails command "generate rspec:install"
+  rails command "generate cucumber:install"
+  add_shoulda_matchers
+  
 
 
   git :init
