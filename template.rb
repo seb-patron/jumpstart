@@ -224,37 +224,41 @@ def add_sitemap
 end
 
 def add_shoulda_matchers
-  template = """
-  # Configures shoulda-matchers gem by specifying the test frameworks and libraries we want to use it with
-  Shoulda::Matchers.configure do |config|
-    config.integrate do |with|
-      with.test_framework :rspec
-      with.library :active_record
-      with.library :active_model
-      with.library :action_controller
-      with.library :rails
-    end 
+  append_to_file "spec/rails_helper.rb" do 
+    """
+# Configures shoulda-matchers gem by specifying the test frameworks and libraries we want to use it with
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :active_record
+    with.library :active_model
+    with.library :action_controller
+    with.library :rails
+  end 
+end
+  \n\n
+  """
   end
-  """.strip
-  insert_into_file "spec/rails_helper.rb","\n\n" + template + "\n\n"
 end
 
 def add_database_cleaner
-  template = """
-  # Sets up cleaning strategy for RSpec
-  RSpec.configure do |config|
-    config.before(:suite) do
-      DatabaseCleaner.strategy = :transaction
-      DatabaseCleaner.clean_with(:truncation)
-    end
-    config.around(:each) do |example|
-      DatabaseCleaner.cleaning do
-        example.run
-      end 
-    end
+  append_to_file "spec/rails_helper.rb" do 
+    """
+# Sets up cleaning strategy for RSpec
+RSpec.configure do |config|
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
   end
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end 
+  end
+end
+\n\n
   """.strip
-  insert_into_file "spec/rails_helper.rb","\n\n" + template + "\n\n"
+  end
 end
 
 # Main setup
