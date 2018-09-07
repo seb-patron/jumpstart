@@ -58,6 +58,11 @@ def add_gems
     gem 'database_cleaner', '~> 1.7'
     gem 'rails-controller-testing', '~> 1.0', '>= 1.0.2'
   end
+
+  gem_group :development do
+    gem 'better_errors', '~> 2.5'
+    gem 'binding_of_caller', '~> 0.8.0'
+  end
 end
 
 def set_application_name
